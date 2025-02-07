@@ -1,0 +1,2 @@
+C:\Users\ellen\source\repos\smartStash\smartStash\obj\Debug\smartstash.esproj.SuggestedBindingRedirects.cache
+C:\Users\ellen\source\repos\smartStash\smartStash\obj\Debug\smartstash.esproj.CoreCompileInputs.cache
