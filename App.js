@@ -23,15 +23,67 @@ function Settings() {
 
 //Display inventory page
 function Inventory() {
-    const { data } = useFetchInventory();
+    const { data } = useFetch('fetchyarn');
+
+    const navigate = useNavigate();
+    const AddYarn = () => {
+        navigate('/addyarn');
+    }
 
     return (
         <header className="inventory">
-            <h1> Inventory!!! </h1>
+            <h1> Inventory </h1>
+            <button className="add-btn" onClick={() => AddYarn()}>Add Yarn</button>
+
             <div>
                 {data.map((yarn, index) => (
-                    <div key={index}>
-                        <h3>{yarn["Yarn name"]}</h3>
+                    <div key={index} className="patternText">
+                        <p>
+                            Name: {yarn['Yarn name']} <br />
+                            Total yardage: {yarn["Total yardage"]} <br />
+                            Ply: {yarn["ply"]} <br />
+                            Wpi: {yarn["wpi"]} <br />
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </header>
+    )
+}
+
+function AddYarn() {
+    return (
+        <header className="inventory">
+            <h1> Add Yarn </h1>
+            <form className = "form">
+                <label> Name:   
+                    <input type="text" />
+                </label><br />
+                <label> Total yardage:
+                    <input type="number" />
+                </label><br />
+                <label> Ply:
+                    <input type="number" />
+                </label><br />
+                <label> Wpi:
+                    <input type="number" />
+                </label>
+                <input type="submit" />
+            </form>
+        </header>
+    );
+}
+
+function Saved() {
+    const { data } = useFetch('fetchsaved');
+    return (
+        <header className="inventory">
+            <h1> Saved </h1>
+            <div className="gallery">
+                {data.map((pattern, index) => (
+                    <div key={index} className="galleryItem">
+                        <img src={pattern.Photo} alt={pattern["Project name"]} />
+                        <div className="galleryCaption">{pattern["Project name"]}</div>
                     </div>
                 ))}
             </div>
@@ -83,11 +135,12 @@ function Patterns() {
     );
 }
 
+// Single pattern data display
 function Pattern() {
     // Gets the passed row data
     const location = useLocation();
     const pattern = location.state;
-    const { yarnData } = useFetchInventory();
+    const { yarnData } = useFetch('fetchyarn');
 
     //If pattern cannot be retreived from data
     if (!pattern) return (
@@ -95,6 +148,10 @@ function Pattern() {
             <h1> {"Project not found"}</h1>
         </header>
     );
+
+    const SavedClick = (data) =>{
+        useSend('/getsaved', data)
+    }
 
     //sort yarn data based on yarn type
     //sort based on yardage
@@ -106,6 +163,7 @@ function Pattern() {
             <h1> {pattern["Project name"]}</h1>
             <h3 style={{ fontSize: '24px' }}>{pattern['url']}</h3>
             <img className="patternImg" src={pattern.Photo} alt={pattern["Project name"]} />
+            <button className="patternSavedBtn" onClick={() => SavedClick(pattern) } >Save Pattern</button>
             <div className="patternText">
                 <p>
                     Difficulty: {pattern["Difficulty average"]} <br />
@@ -117,18 +175,16 @@ function Pattern() {
             </div>
             <div className="yarnContainer">
                 <h3> Available Yarn:</h3>
-                
             </div>
         </header>
     )
 }
 
-//Get yarn inventory
-function useFetchInventory() {
+function useFetch(url) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/fetchYarn')
+        fetch('http://localhost:5000/' + url)
             .then(res => {
                 console.log("Response Status:", res.status);  // Check the status code
                 return res.json();
@@ -145,14 +201,27 @@ function useFetchInventory() {
     return { data }
 }
 
+//URl - specifies whether adding to inventory or saved
+//DATA - info to be added the the defined json
+function useSend(url, data) {
+
+    fetch('http://localhost:5000/' + url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })   
+}
+
+
 function Header() {
     const navigate = useNavigate();
     return (
         <>
             <header className="homepage">
                 <h1> SmartStash </h1>
-                <button className="settings-btn" onClick={() => navigate('/settings')}>Settings</button>
-                <button className="profile-btn" onClick={() => navigate('/profile')}>Profile</button>
+                <button className="profile-btn" onClick={() => navigate('/saved')}>Saved</button>
                 <button className="patterns-btn" onClick={() => navigate('/patterns')}>Patterns</button>
                 <button className="inv-btn" onClick={() => navigate('/inventory')}>Inventory</button>
             </header>
@@ -164,11 +233,12 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<Header />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/saved" element={<Saved />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/patterns" element={<Patterns />} />
             <Route path="/:id" element={<Pattern />} />
-            <Route path="/inventory" element={<Inventory /> }/>
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/addyarn" element={<AddYarn />} />
         </Routes>
     );
 }

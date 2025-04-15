@@ -29,17 +29,23 @@
 }
 
 .homepage .profile-btn {
-    top: 50px;
-    right: 30px;
+    top: 300px;
+    align-self: center;
+    width: 200px;
+    font-size: 25px
 }
 .homepage .patterns-btn {
-    top: 100px;
-    right: 30px;
+    top: 200px;
+    align-self: center;
+    width: 200px;
+    font-size: 25px
 }
 
 .homepage .inv-btn {
-    top: 100px;
-    left: 30px;
+    top: 400px;
+    align-self: center;
+    width: 200px;
+    font-size: 25px
 }
 
 .profile {
@@ -65,7 +71,7 @@
 }
 
 .inventory {
-    background-color: #b200ff;
+    background-color: #6812b9;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -75,8 +81,32 @@
     color: white;
 }
 
+.inventory .add-btn {
+    top: 200px;
+    right: 10px;
+    width: 200px;
+    font-size: 25px
+}
+
+.form{
+    background-color: #4a037c
+}
+
+.form label{
+    display:block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.form input {
+    display: flex;
+    padding: 10px;
+    font-size: 20px;
+    justify-content: center;
+}
+
 .patterns {
-    background-color: #b200ff;
+    background-color: #6812b9;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -129,5 +159,10 @@
     justify-content: flex-start;
     color: white;
     width: 100%;
+}
+
+.patternSavedBtn {
+    top: 50px;
+    right: 30px;
 }
 
